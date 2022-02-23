@@ -1,0 +1,11 @@
+---
+title: "bm2_hw3"
+author: "Roxy Zhang"
+date: "2/23/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
