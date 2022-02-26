@@ -68,9 +68,37 @@ seed_fit = glm(cbind(germination, batch - germination) ~ extract + seed, family 
 summary(seed_fit)
 
 seed_fit$deviance
+
+# pearson chisq
+sum(residuals(seed_fit,type='pearson')^2)
 ```
 
 ```{r}
+# dispersion parameter
+g = sum(residuals(seed_fit,type='pearson')^2)
 
+phi = g / (21 - 3)
+
+tilde_phi = seed_fit$deviance / seed_fit$residual
+```
+
+```{r}
+# half-normal plot
+residual = residuals(seed_fit,type='pearson')
+
+plot(qnorm((21+1:21+0.5)/(2*21+1.125)),sort(abs(residual)),
+     xlab = 'Expected Half-Normal Order Statistics',
+     ylab = 'Ordered Absolute Pearson Residuals')
+     
+abline(a = 0, b = 1, col = 'blue')
+abline(a = 0, b = sqrt(phi), col = 'red')
+```
+
+```{r}
+# fit model with constant over-dispersion
+summary(seed_fit, dispersion = phi)
+
+# goodness of fit
+1 - pchisq(seed_fit$deviance/phi, 21-3)
 ```
 
