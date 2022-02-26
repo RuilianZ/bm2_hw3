@@ -6,6 +6,71 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(psych)
+```
+
+
+## Question 1
+
+```{r}
+age <- rep(c(25, 35, 45, 55, 65, 75), 2)
+case <- c(1, 4, 25, 42, 19, 5, 0, 5, 21, 34, 36, 8)
+control <- c(9, 26, 29, 27, 18, 0, 106, 164, 138, 139, 88, 31)
+exposure <- c(rep(1, 6), rep(0 , 6))
+
+y1 <- cbind(case, control)
+
+logit_fit = glm(y1 ~ exposure + age, family = binomial(link='logit'))
+
+summary(logit_fit)
+```
+
+```{r}
+age_group <- c(1:6) %>% 
+  as.factor()
+ 
+dummy <- dummy.code(age_group)
+
+a1 <- rep(dummy[,1], 2)
+a2 <- rep(dummy[,2], 2)
+a3 <- rep(dummy[,3], 2)
+a4 <- rep(dummy[,4], 2)
+a5 <- rep(dummy[,5], 2)
+a6 <- rep(dummy[,6], 2)
+
+fit0 = glm(y1 ~ a1 + a2 + a3 + a4 + a5 + a6, family = binomial(link = 'logit'))
+
+summary(fit0)
+
+fit0$deviance
+
+
+fit1 = glm(y1 ~ exposure + a1 + a2 + a3 + a4 + a5 + a6, family = binomial(link = 'logit'))
+
+summary(fit1)
+
+fit1$deviance
+```
+
+
+## Question 2
+
+```{r}
+extract = c(rep(1, 5), rep(0, 6), rep(1, 5), rep(0,5))
+seed = c(rep(1, 11), rep(0, 10))
+
+germination = c(10, 23, 23, 26, 17, 5, 53, 55, 32, 46, 10, 8, 10, 8, 23, 0, 3, 22, 15, 32, 3)
+batch = c(39, 62, 81, 51, 39, 6, 74, 72, 51, 79, 13, 16, 30, 28, 45, 4, 12, 41, 30, 51, 7)
+
+seed_fit = glm(cbind(germination, batch - germination) ~ extract + seed, family = binomial(link = 'logit'))
+
+summary(seed_fit)
+
+seed_fit$deviance
+```
+
+```{r}
+
 ```
 
